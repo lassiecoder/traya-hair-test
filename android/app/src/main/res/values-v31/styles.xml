@@ -1,0 +1,24 @@
+<resources>
+
+    <!--
+      Android resolves a whole style resource from whichever config-qualified folder best
+      matches the device (values vs. values-v31), it does NOT merge items from both — so this
+      has to fully restate the base theme (parent + its items), not just the splash additions,
+      or devices matching this bucket lose everything the base style set.
+
+      Android 12+ (API 31+) always shows its own system splash screen before the JS bundle
+      takes over — by default that's the app's launcher icon (still the unbranded RN template
+      icon, never replaced with a real Traya logo) on an auto-picked backdrop. The three
+      windowSplashScreen* items below make that unavoidable window blank instead, matching
+      windowBackground/SplashScreen.tsx, so cold start reads as going straight into the app's
+      own Traya splash rather than flashing a mismatched system screen first.
+    -->
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
+        <item name="android:windowBackground">@color/splash_background</item>
+        <item name="android:windowSplashScreenBackground">@color/splash_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_icon_transparent</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/splash_background</item>
+    </style>
+
+</resources>

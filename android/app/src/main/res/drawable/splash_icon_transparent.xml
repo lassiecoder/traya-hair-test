@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  A real, fully-transparent 288dp square (Android's standard splash-icon safe-zone size) — not
+  an empty/zero-path drawable. An icon with no drawable content at all was silently rejected by
+  the system SplashScreen renderer as invalid, which fell back to the app's actual adaptive
+  launcher icon (the default green Android robot on a teal grid) instead of showing nothing, so
+  the fallback icon kept appearing despite this attribute being set. A real path filled with a
+  fully transparent color renders as nothing while still being a valid drawable the renderer
+  accepts as-is.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="288dp"
+    android:height="288dp"
+    android:viewportWidth="288"
+    android:viewportHeight="288">
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,0h288v288h-288z" />
+</vector>
