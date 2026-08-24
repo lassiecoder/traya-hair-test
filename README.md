@@ -6,8 +6,6 @@ This README documents not just _how to run it_, but _why it's built the way it i
 
 ## Contents
 
-- [Traya, Hair Assessment App](#traya-hair-assessment-app)
-  - [Contents](#contents)
   - [Design system](#design-system)
     - [Colors](#colors)
     - [Typography](#typography)
@@ -22,7 +20,12 @@ This README documents not just _how to run it_, but _why it's built the way it i
   - [Running the project](#running-the-project)
     - [Building a release APK](#building-a-release-apk)
   - [Testing](#testing)
-  - [Known limitations / what's stubbed](#known-limitations--whats-stubbed)
+
+ 
+## Preview
+Check out the whole flow [HERE](https://github.com/lassiecoder/traya-hair-test/edit/main/README.md)
+
+https://github.com/user-attachments/assets/3b296af2-9fb8-44d3-9dec-918d0cc0322f
 
 ## Design system
 
@@ -152,13 +155,3 @@ cd android
 ## Testing
 
 `npm test` runs Jest. Coverage today is a single smoke test (`__tests__/App.test.tsx`) that renders `<App />` and asserts it doesn't throw, there's no meaningful screen- or logic-level test coverage yet. Validation logic (`src/utils/validation.ts`) and gender/icon resolution (`src/utils/assessmentIcons.ts`, `src/data/userGender.ts`) are pure functions and would be the highest-value next additions to cover.
-
-## Known limitations / what's stubbed
-
-Being upfront about the state of things, so nobody mistakes placeholder content for a finished feature:
-
-- **No real backend.** `src/services/auth.ts` fabricates a user locally; there's no persistence, no real authentication, no session handling.
-- **No real assessment scoring.** The Hair Health Index, diagnosis text, and root-cause breakdown on the results/report screens are hardcoded (`src/data/fullReport.ts`, `ResultsScreen.tsx`), the 11 answers the user gives aren't actually fed into anything yet.
-- **No real checkout.** "Start my plan" on the full report screen loops back into the assessment funnel, there's no payment flow, and the comment in `RootNavigator.tsx` says so.
-- **Product photography is a shared placeholder.** All four products reuse the same four-image gallery (`PRODUCT_GALLERY` in `src/data/fullReport.ts`) pending real per-product photography.
-- **The app icon is still the default React Native template icon**, not a real Traya mark, worth swapping before this goes anywhere near an app store listing.
