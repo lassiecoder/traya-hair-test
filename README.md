@@ -23,7 +23,7 @@ This README documents not just _how to run it_, but _why it's built the way it i
 
  
 ## Preview
-Check out the whole flow [HERE](https://github.com/lassiecoder/traya-hair-test/edit/main/README.md)
+Check out the whole flow [HERE](https://drive.google.com/file/d/1RdkOt6IB24HqA0CNCtbQXc6O-FOmS3aq/view?usp=sharing)
 
 https://github.com/user-attachments/assets/3b296af2-9fb8-44d3-9dec-918d0cc0322f
 
