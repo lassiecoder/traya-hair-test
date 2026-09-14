@@ -13,7 +13,7 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ImagePreviewOverlay from '../components/ImagePreviewOverlay';
 import {ReportProduct} from '../data/fullReport';
-import {colors, textStyles} from '../theme';
+import {colors, shadows, textStyles} from '../theme';
 
 const BACK_ICON = require('../../assets/images/back-btn.png');
 const PLUS_ICON = require('../../assets/images/plus.png');
@@ -98,17 +98,20 @@ function ProductDetailScreen({product, onBack}: ProductDetailScreenProps): React
         </Pressable>
 
         <View style={styles.gallery}>
-          <Pressable style={styles.mainImageWrap} onPress={() => setPreviewIndex(0)}>
-            <Image source={product.gallery[0]} style={styles.mainImage} resizeMode="cover" />
-          </Pressable>
+          <View style={styles.mainImageShadow}>
+            <Pressable style={styles.mainImageWrap} onPress={() => setPreviewIndex(0)}>
+              <Image source={product.gallery[0]} style={styles.mainImage} resizeMode="cover" />
+            </Pressable>
+          </View>
           <View style={styles.thumbnailColumn}>
             {thumbnails.map((source, index) => (
-              <Pressable
+              <View
                 key={index}
-                style={[styles.thumbnailWrap, index < thumbnails.length - 1 && styles.thumbnailSpacing]}
-                onPress={() => setPreviewIndex(index + 1)}>
-                <Image source={source} style={styles.thumbnailImage} resizeMode="cover" />
-              </Pressable>
+                style={[styles.thumbnailShadow, index < thumbnails.length - 1 && styles.thumbnailSpacing]}>
+                <Pressable style={styles.thumbnailWrap} onPress={() => setPreviewIndex(index + 1)}>
+                  <Image source={source} style={styles.thumbnailImage} resizeMode="cover" />
+                </Pressable>
+              </View>
             ))}
           </View>
         </View>
@@ -142,9 +145,12 @@ function ProductDetailScreen({product, onBack}: ProductDetailScreenProps): React
             <Pressable
               key={tab.key}
               onPress={() => setActiveTab(tab.key)}
-              style={index < TABS.length - 1 && styles.tabSpacing}>
+              style={[
+                styles.tabPill,
+                activeTab === tab.key && styles.tabPillActive,
+                index < TABS.length - 1 && styles.tabSpacing,
+              ]}>
               <Text style={[styles.tabLabel, activeTab === tab.key && styles.tabLabelActive]}>{tab.label}</Text>
-              <View style={[styles.tabIndicator, activeTab === tab.key && styles.tabIndicatorActive]} />
             </Pressable>
           ))}
         </View>
@@ -212,13 +218,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 24,
   },
-  mainImageWrap: {
+  mainImageShadow: {
     flex: 1.5,
     aspectRatio: 0.82,
     borderRadius: 20,
+    marginRight: 12,
+    ...shadows.md,
+  },
+  mainImageWrap: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 20,
     overflow: 'hidden',
     backgroundColor: colors.onPrimary,
-    marginRight: 12,
   },
   mainImage: {
     width: '100%',
@@ -226,6 +238,11 @@ const styles = StyleSheet.create({
   },
   thumbnailColumn: {
     flex: 1,
+  },
+  thumbnailShadow: {
+    flex: 1,
+    borderRadius: 16,
+    ...shadows.sm,
   },
   thumbnailWrap: {
     flex: 1,
@@ -309,12 +326,18 @@ const styles = StyleSheet.create({
   },
   tabRow: {
     flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
     marginBottom: 20,
   },
   tabSpacing: {
-    marginRight: 24,
+    marginRight: 10,
+  },
+  tabPill: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 20,
+  },
+  tabPillActive: {
+    backgroundColor: colors.primarySoft,
   },
   tabLabel: {
     ...textStyles.label,
@@ -322,14 +345,6 @@ const styles = StyleSheet.create({
   },
   tabLabelActive: {
     color: colors.textPrimary,
-  },
-  tabIndicator: {
-    height: 2,
-    marginTop: 10,
-    backgroundColor: 'transparent',
-  },
-  tabIndicatorActive: {
-    backgroundColor: colors.primary,
   },
   tabContent: {
     ...textStyles.body,

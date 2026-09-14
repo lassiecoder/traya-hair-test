@@ -1,15 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  Animated,
-  Easing,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
 import AgePicker from '../components/AgePicker';
 import AssessmentNote from '../components/AssessmentNote';
+import BackButton from '../components/BackButton';
 import Button from '../components/Button';
 import CheckboxOptionCard, {
   CHECKBOX_SELECT_FEEDBACK_MS,
@@ -19,15 +12,14 @@ import OptionCard, {
 } from '../components/OptionCard';
 import ProgressBar from '../components/ProgressBar';
 import ScreenContainer from '../components/ScreenContainer';
+import {
+  ASSESSMENT_SECTION_LENGTHS,
+  getSectionProgress,
+} from '../data/assessmentQuestions';
 import { IconGender } from '../data/userGender';
 import { colors, textStyles } from '../theme';
 import { AssessmentOption, AssessmentQuestion } from '../types/assessment';
-import {
-  resolveOptionIcon,
-  resolveOptionSelectedIcon,
-} from '../utils/assessmentIcons';
-
-const BACK_ICON = require('../../assets/images/back-btn.png');
+import { resolveOptionIcon } from '../utils/assessmentIcons';
 
 const HEADER_ENTRANCE_MS = 360;
 const BODY_ENTRANCE_MS = 360;
@@ -38,7 +30,6 @@ const BODY_ENTRANCE_OFFSET = 40;
 type AssessmentQuestionScreenProps = {
   question: AssessmentQuestion;
   questionNumber: number;
-  totalQuestions: number;
   iconGender: IconGender;
   onSelectOption: (optionId: string) => void;
   onBack: () => void;
@@ -47,7 +38,6 @@ type AssessmentQuestionScreenProps = {
 function AssessmentQuestionScreen({
   question,
   questionNumber,
-  totalQuestions,
   iconGender,
   onSelectOption,
   onBack,
@@ -64,6 +54,10 @@ function AssessmentQuestionScreen({
     question.type === 'choice' && question.variant === 'checkbox';
   const isGridVariant =
     question.type === 'choice' && question.variant === 'grid';
+  const isPhotoVariant =
+    question.type === 'choice' && question.variant === 'photo';
+  const isPhotoGridVariant =
+    question.type === 'choice' && question.variant === 'photoGrid';
   const isMultiSelect =
     question.type === 'choice' && question.multiSelect === true;
 
@@ -133,29 +127,47 @@ function AssessmentQuestionScreen({
     opacity: bodyAnim,
     transform: [{ translateY: bodyTranslateY }],
   };
-  const pushesFollowingContentToBottom =
-    Boolean(question.note) || isMultiSelect;
+  const sectionProgress = getSectionProgress(questionNumber);
 
-  const progressHeader = (
-    <View style={styles.progressRow}>
-      <Pressable onPress={onBack} style={styles.backButton} hitSlop={8}>
-        <Image
-          source={BACK_ICON}
-          style={styles.backIcon}
-          resizeMode="contain"
+  const showCta = question.type === 'age' || isMultiSelect;
+  const footer = (
+    <View style={styles.footerRow}>
+      <BackButton onPress={onBack} />
+      {showCta ? (
+        <Button
+          label="Continue"
+          disabled={
+            question.type === 'choice' && selectedOptionIds.length === 0
+          }
+          onPress={() =>
+            question.type === 'age'
+              ? onSelectOption(String(age))
+              : onSelectOption(selectedOptionIds.join(','))
+          }
+          style={styles.footerCta}
         />
-      </Pressable>
-      <View style={styles.progressBarWrap}>
-        <ProgressBar current={questionNumber} total={totalQuestions} />
-      </View>
+      ) : null}
     </View>
   );
 
   return (
-    <ScreenContainer header={progressHeader}>
-      <Text style={styles.progressLabel}>
-        {questionNumber}/{totalQuestions}
-      </Text>
+    <ScreenContainer
+      header={
+        <ProgressBar
+          current={questionNumber}
+          sections={ASSESSMENT_SECTION_LENGTHS}
+        />
+      }
+      footer={footer}
+    >
+      <View style={styles.progressLabelRow}>
+        <Text style={styles.progressLabelSection}>
+          {sectionProgress.sectionLabel.toUpperCase()}
+        </Text>
+        <Text style={styles.progressLabel}>
+          {sectionProgress.positionInSection}/{sectionProgress.sectionLength}
+        </Text>
+      </View>
 
       <Animated.View style={{ transform: [{ translateX: headerTranslateX }] }}>
         <Text style={styles.title}>{question.title}</Text>
@@ -165,8 +177,7 @@ function AssessmentQuestionScreen({
       {question.type === 'choice' ? (
         <Animated.View
           style={[
-            pushesFollowingContentToBottom && styles.bodyFlex,
-            isGridVariant && styles.grid,
+            (isGridVariant || isPhotoGridVariant) && styles.grid,
             optionsAnimatedStyle,
           ]}
         >
@@ -198,14 +209,24 @@ function AssessmentQuestionScreen({
                 title={option.title}
                 description={option.description}
                 icon={resolveOptionIcon(option, iconGender)}
-                selectedIcon={resolveOptionSelectedIcon(option, iconGender)}
                 selected={selectedOptionId === option.id}
                 disabled={
                   selectedOptionId !== null && selectedOptionId !== option.id
                 }
                 onPress={() => setSelectedOptionId(option.id)}
-                layout={isGridVariant ? 'grid' : 'row'}
-                style={isGridVariant && styles.gridCard}
+                layout={
+                  isGridVariant
+                    ? 'grid'
+                    : isPhotoVariant
+                    ? 'photo'
+                    : isPhotoGridVariant
+                    ? 'photoGrid'
+                    : 'row'
+                }
+                photoAspectRatio={
+                  question.type === 'choice' ? question.photoAspectRatio : undefined
+                }
+                style={(isGridVariant || isPhotoGridVariant) && styles.gridCard}
               />
             ),
           )}
@@ -220,10 +241,6 @@ function AssessmentQuestionScreen({
               onChange={setAge}
             />
           </View>
-          <Button
-            label="Continue"
-            onPress={() => onSelectOption(String(age))}
-          />
         </Animated.View>
       )}
 
@@ -232,45 +249,32 @@ function AssessmentQuestionScreen({
           <AssessmentNote text={question.note} />
         </Animated.View>
       ) : null}
-
-      {isMultiSelect ? (
-        <Animated.View style={bodyAnimatedStyle}>
-          <Button
-            label="Continue"
-            disabled={selectedOptionIds.length === 0}
-            onPress={() => onSelectOption(selectedOptionIds.join(','))}
-            style={question.note ? styles.continueWithNote : undefined}
-          />
-        </Animated.View>
-      ) : null}
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  progressRow: {
+  footerRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  backButton: {
-    width: 28,
-    height: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  backIcon: {
-    width: 18,
-    height: 18,
-  },
-  progressBarWrap: {
+  footerCta: {
     flex: 1,
+  },
+  progressLabelRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 12,
+    marginBottom: 24,
+  },
+  progressLabelSection: {
+    ...textStyles.captionEmphasis,
+    color: colors.textPrimary,
   },
   progressLabel: {
     ...textStyles.caption,
     color: colors.textMuted,
-    marginTop: 12,
-    marginBottom: 24,
   },
   title: {
     ...textStyles.title,
@@ -281,9 +285,6 @@ const styles = StyleSheet.create({
     ...textStyles.body,
     color: colors.textMuted,
     marginBottom: 28,
-  },
-  bodyFlex: {
-    flex: 1,
   },
   ageBody: {
     flex: 1,
@@ -299,9 +300,6 @@ const styles = StyleSheet.create({
   },
   gridCard: {
     width: '48%',
-  },
-  continueWithNote: {
-    marginTop: 16,
   },
 });
 

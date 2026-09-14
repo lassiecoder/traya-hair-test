@@ -1,6 +1,6 @@
 import React from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import {colors, textStyles} from '../theme';
+import {colors, shadows, textStyles} from '../theme';
 
 /** Time the checked state stays visible before the flow advances. */
 export const CHECKBOX_SELECT_FEEDBACK_MS = 300;
@@ -27,7 +27,11 @@ function CheckboxOptionCard({
     <Pressable
       onPress={onPress}
       disabled={disabled}
-      style={({pressed}) => [styles.card, pressed && !disabled && styles.cardPressed]}>
+      style={({pressed}) => [
+        styles.card,
+        selected && styles.cardSelected,
+        pressed && !disabled && styles.cardPressed,
+      ]}>
       <View style={styles.checkboxWrap}>
         {selected ? (
           <Image source={CHECKED_ICON} style={styles.checkboxImage} resizeMode="contain" />
@@ -49,8 +53,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.inputBackground,
     borderRadius: 20,
+    borderWidth: 2,
+    borderColor: 'transparent',
     padding: 16,
     marginBottom: 16,
+    ...shadows.sm,
+  },
+  cardSelected: {
+    backgroundColor: colors.inputBackgroundSelected,
+    borderColor: colors.primary,
+    ...shadows.md,
   },
   cardPressed: {
     opacity: 0.75,

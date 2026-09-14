@@ -1,6 +1,9 @@
 import React from 'react';
 import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
-import {colors, textStyles} from '../theme';
+import {colors, shadows, textStyles} from '../theme';
+import IconBadge from './IconBadge';
+
+const CHECKED_ICON = require('../../assets/images/checked.png');
 
 type IncludedCardProps = {
   title: string;
@@ -12,6 +15,7 @@ type IncludedCardProps = {
 function IncludedCard({title, description, style}: IncludedCardProps): React.JSX.Element {
   return (
     <View style={[styles.card, style]}>
+      <IconBadge icon={CHECKED_ICON} size={36} style={styles.badge} />
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.description}>{description}</Text>
     </View>
@@ -24,6 +28,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.inputBackground,
     borderRadius: 20,
     padding: 16,
+    ...shadows.sm,
+  },
+  badge: {
+    marginBottom: 12,
   },
   title: {
     ...textStyles.label,

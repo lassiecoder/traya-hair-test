@@ -4,6 +4,46 @@ import { AssessmentQuestion } from '../types/assessment';
 export const TOTAL_ASSESSMENT_QUESTIONS = 11;
 
 /**
+ * Groups the 11 questions below into labeled sections for the segmented progress bar —
+ * purely a display grouping, doesn't affect answer collection or question order.
+ */
+export const ASSESSMENT_SECTIONS: { label: string; questionCount: number }[] = [
+  { label: 'Hair basics', questionCount: 3 }, // hair-goal, age, hair-texture
+  { label: 'Hair & scalp', questionCount: 3 }, // shedding-amount, parting, oil-timing
+  { label: 'Lifestyle', questionCount: 2 }, // stress-level, sleep-quality
+  { label: 'Health & diet', questionCount: 3 }, // health-history, medical-conditions, diet
+];
+
+export const ASSESSMENT_SECTION_LENGTHS = ASSESSMENT_SECTIONS.map(
+  section => section.questionCount,
+);
+
+/** Maps a 1-based overall question number to its section label and position within that section. */
+export function getSectionProgress(questionNumber: number): {
+  sectionLabel: string;
+  positionInSection: number;
+  sectionLength: number;
+} {
+  let answeredBefore = 0;
+  for (const section of ASSESSMENT_SECTIONS) {
+    if (questionNumber <= answeredBefore + section.questionCount) {
+      return {
+        sectionLabel: section.label,
+        positionInSection: questionNumber - answeredBefore,
+        sectionLength: section.questionCount,
+      };
+    }
+    answeredBefore += section.questionCount;
+  }
+  const lastSection = ASSESSMENT_SECTIONS[ASSESSMENT_SECTIONS.length - 1];
+  return {
+    sectionLabel: lastSection.label,
+    positionInSection: lastSection.questionCount,
+    sectionLength: lastSection.questionCount,
+  };
+}
+
+/**
  * All 11 questions' copy has been shared. Only the option `icon`/`selectedIcon`
  * assets are still outstanding for a few of the later questions.
  */
@@ -11,6 +51,7 @@ export const ASSESSMENT_QUESTIONS: AssessmentQuestion[] = [
   {
     id: 'hair-goal',
     type: 'choice',
+    variant: 'photo',
     title: 'What do you want your hair to do?',
     subtitle: 'This sets what your plan optimizes for first.',
     options: [
@@ -18,22 +59,19 @@ export const ASSESSMENT_QUESTIONS: AssessmentQuestion[] = [
         id: 'stop-the-fall',
         title: 'Stop the fall',
         description: 'Reduce daily shedding',
-        icon: require('../../assets/images/stop-hairfall.png'),
-        selectedIcon: require('../../assets/images/stop-hairfall-selected.png'),
+        icon: require('../../assets/images/stopthefall.png'),
       },
       {
         id: 'regrow-density',
         title: 'Regrow density',
         description: 'Filling thinning zones',
-        icon: require('../../assets/images/regrow-density.png'),
-        selectedIcon: require('../../assets/images/regrow-density-selected.png'),
+        icon: require('../../assets/images/regrowdensity.png'),
       },
       {
         id: 'repair-quality',
         title: 'Repair quality',
         description: 'Frizz, dryness, breakage',
-        icon: require('../../assets/images/repair-quality.png'),
-        selectedIcon: require('../../assets/images/repair-quality-selected.png'),
+        icon: require('../../assets/images/repairquality.png'),
       },
     ],
   },
@@ -49,32 +87,29 @@ export const ASSESSMENT_QUESTIONS: AssessmentQuestion[] = [
   {
     id: 'hair-texture',
     type: 'choice',
+    variant: 'photoGrid',
     title: 'What does your hair look like naturally?',
     subtitle: 'Untreated, no straightening, coloring or perming.',
     options: [
       {
         id: 'straight-hair',
         title: 'Straight hair',
-        icon: require('../../assets/images/straight-hair.png'),
-        selectedIcon: require('../../assets/images/straight-hair-selected.png'),
+        icon: require('../../assets/images/straighthair.png'),
       },
       {
         id: 'wavy-hair',
         title: 'Wavy hair',
-        icon: require('../../assets/images/wavy-hair.png'),
-        selectedIcon: require('../../assets/images/wavy-hair-selected.png'),
+        icon: require('../../assets/images/wavy.png'),
       },
       {
         id: 'curly-hair',
         title: 'Curly hair',
-        icon: require('../../assets/images/curly-hair.png'),
-        selectedIcon: require('../../assets/images/curly-hair-selected.png'),
+        icon: require('../../assets/images/curlyhair.png'),
       },
       {
         id: 'coily-hair',
         title: 'Coily hair',
-        icon: require('../../assets/images/coily-hair.png'),
-        selectedIcon: require('../../assets/images/coily-hair-selected.png'),
+        icon: require('../../assets/images/coilyhair.png'),
       },
     ],
   },
@@ -102,7 +137,8 @@ export const ASSESSMENT_QUESTIONS: AssessmentQuestion[] = [
   {
     id: 'parting',
     type: 'choice',
-    variant: 'grid',
+    variant: 'photoGrid',
+    photoAspectRatio: 136 / 170,
     title: 'Which parting looks most like yours?',
     subtitle:
       'Part your hair and check a mirror, more visible scalp means a later stage.',
@@ -110,62 +146,27 @@ export const ASSESSMENT_QUESTIONS: AssessmentQuestion[] = [
       {
         id: 'even-parting',
         title: 'Even parting',
-        genderedIcon: {
-          male: require('../../assets/images/even-parting-m.png'),
-          female: require('../../assets/images/even-parting-f.png'),
-        },
-        genderedSelectedIcon: {
-          male: require('../../assets/images/even-parting-selected-m.png'),
-          female: require('../../assets/images/even-parting-selected-f.png'),
-        },
+        icon: require('../../assets/images/evenparting.png'),
       },
       {
         id: 'widening-parting',
         title: 'Widening parting',
-        genderedIcon: {
-          male: require('../../assets/images/widening-parting-m.png'),
-          female: require('../../assets/images/widening-parting-f.png'),
-        },
-        genderedSelectedIcon: {
-          male: require('../../assets/images/widening-parting-selected-m.png'),
-          female: require('../../assets/images/widening-parting-selected-f.png'),
-        },
+        icon: require('../../assets/images/wideningparting.png'),
       },
       {
         id: 'advanced-widening',
         title: 'Advanced widening',
-        genderedIcon: {
-          male: require('../../assets/images/advanced-widening-m.png'),
-          female: require('../../assets/images/advanced-widening-f.png'),
-        },
-        genderedSelectedIcon: {
-          male: require('../../assets/images/advanced-widening-selected-m.png'),
-          female: require('../../assets/images/advanced-widening-selected-f.png'),
-        },
+        icon: require('../../assets/images/advancedparting.png'),
       },
       {
         id: 'diffuse-thinning',
         title: 'Diffuse thinning',
-        genderedIcon: {
-          male: require('../../assets/images/diffuse-thinning-m.png'),
-          female: require('../../assets/images/diffuse-thinning-f.png'),
-        },
-        genderedSelectedIcon: {
-          male: require('../../assets/images/diffuse-thinning-selected-m.png'),
-          female: require('../../assets/images/diffuse-thinning-selected-f.png'),
-        },
+        icon: require('../../assets/images/diffuseparting.png'),
       },
       {
         id: 'coin-size-patch',
         title: 'Coin size patch',
-        genderedIcon: {
-          male: require('../../assets/images/coin-size-patch-m.png'),
-          female: require('../../assets/images/coin-size-patch-f.png'),
-        },
-        genderedSelectedIcon: {
-          male: require('../../assets/images/coin-size-patch-selected-m.png'),
-          female: require('../../assets/images/coin-size-patch-selected-f.png'),
-        },
+        icon: require('../../assets/images/coinsizepatch.png'),
       },
     ],
   },
@@ -220,12 +221,12 @@ export const ASSESSMENT_QUESTIONS: AssessmentQuestion[] = [
     title: 'Has your body been through any of these?',
     subtitle: 'Select everything that applies in the last 12 months.',
     options: [
-      {id: 'none-of-these', title: 'None of these', exclusive: true},
-      {id: 'thyroid', title: 'Thyroid'},
-      {id: 'anemia-low-haemoglobin', title: 'Anemia or low haemoglobin'},
-      {id: 'severe-illness-or-surgery', title: 'Severe illness or surgery'},
-      {id: 'pcos-hormonal-imbalance', title: 'PCOS or hormonal imbalance'},
-      {id: 'pregnancy-post-partum', title: 'Pregnancy or post-partum'},
+      { id: 'none-of-these', title: 'None of these', exclusive: true },
+      { id: 'thyroid', title: 'Thyroid' },
+      { id: 'anemia-low-haemoglobin', title: 'Anemia or low haemoglobin' },
+      { id: 'severe-illness-or-surgery', title: 'Severe illness or surgery' },
+      { id: 'pcos-hormonal-imbalance', title: 'PCOS or hormonal imbalance' },
+      { id: 'pregnancy-post-partum', title: 'Pregnancy or post-partum' },
     ],
   },
   {
@@ -237,12 +238,12 @@ export const ASSESSMENT_QUESTIONS: AssessmentQuestion[] = [
     subtitle: 'We check this so every ingredient in your plan is safe for you.',
     note: 'An answer here can remove a supplement from your kit entirely.',
     options: [
-      {id: 'none-of-these', title: 'None of these', exclusive: true},
-      {id: 'high-blood-pressure', title: 'High blood pressure'},
-      {id: 'low-blood-pressure', title: 'Low blood pressure'},
-      {id: 'liver-condition', title: 'Liver condition'},
-      {id: 'cardiovascular-disorder', title: 'Cardiovascular disorder'},
-      {id: 'on-prescription-medicine', title: 'On prescription medicine'},
+      { id: 'none-of-these', title: 'None of these', exclusive: true },
+      { id: 'high-blood-pressure', title: 'High blood pressure' },
+      { id: 'low-blood-pressure', title: 'Low blood pressure' },
+      { id: 'liver-condition', title: 'Liver condition' },
+      { id: 'cardiovascular-disorder', title: 'Cardiovascular disorder' },
+      { id: 'on-prescription-medicine', title: 'On prescription medicine' },
     ],
   },
   {
@@ -252,10 +253,10 @@ export const ASSESSMENT_QUESTIONS: AssessmentQuestion[] = [
     title: 'How would you describe your diet?',
     subtitle: 'Your diet plan and your capsule base both depend on this.',
     options: [
-      {id: 'vegetarian', title: 'Vegetarian'},
-      {id: 'vegan', title: 'Vegan'},
-      {id: 'eggetarian', title: 'Eggetarian'},
-      {id: 'non-vegetarian', title: 'Non-vegetarian'},
+      { id: 'vegetarian', title: 'Vegetarian' },
+      { id: 'vegan', title: 'Vegan' },
+      { id: 'eggetarian', title: 'Eggetarian' },
+      { id: 'non-vegetarian', title: 'Non-vegetarian' },
     ],
   },
 ];

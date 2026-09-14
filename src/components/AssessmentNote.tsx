@@ -1,6 +1,6 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
-import {colors, textStyles} from '../theme';
+import {colors, shadows, textStyles} from '../theme';
 
 const NOTE_ICON = require('../../assets/images/note.png');
 
@@ -22,10 +22,11 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#57654F',
+    backgroundColor: colors.noteBackground,
     borderRadius: 16,
     padding: 14,
     marginTop: 16,
+    ...shadows.sm,
   },
   icon: {
     width: 26,

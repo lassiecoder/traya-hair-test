@@ -9,7 +9,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import {colors, fontFamily, textStyles} from '../theme';
+import {colors, fontFamily, shadows, textStyles} from '../theme';
 
 const BACKDROP_FADE_MS = 200;
 const SHEET_ENTRANCE_MS = 280;
@@ -111,7 +111,9 @@ function SelectField({
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
-      <Pressable style={[styles.input, error ? styles.inputError : null]} onPress={() => setIsOpen(true)}>
+      <Pressable
+        style={[styles.input, isOpen && styles.inputFocused, error ? styles.inputError : null]}
+        onPress={() => setIsOpen(true)}>
         <Text style={value ? styles.value : styles.placeholder}>{value ?? placeholder}</Text>
       </Pressable>
       {error ? (
@@ -127,6 +129,7 @@ function SelectField({
           </Animated.View>
 
           <Animated.View style={[styles.sheet, {transform: [{translateY: sheetTranslateY}]}]}>
+            <View style={styles.sheetHandle} />
             {options.map(option => (
               <Pressable
                 key={option}
@@ -162,6 +165,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 1.5,
     borderColor: 'transparent',
+    ...shadows.sm,
+  },
+  inputFocused: {
+    borderColor: colors.primary,
   },
   inputError: {
     borderColor: colors.error,
@@ -202,6 +209,15 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 24,
     paddingVertical: 8,
     paddingBottom: 24,
+    ...shadows.lg,
+  },
+  sheetHandle: {
+    width: 36,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: colors.divider,
+    alignSelf: 'center',
+    marginBottom: 12,
   },
   option: {
     paddingVertical: 16,

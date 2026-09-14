@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, TextInput, TextInputProps, View} from 'react-native';
-import {colors, fontFamily, textStyles} from '../theme';
+import {colors, fontFamily, shadows, textStyles} from '../theme';
 
 type TextFieldProps = TextInputProps & {
   label: string;
@@ -8,13 +8,36 @@ type TextFieldProps = TextInputProps & {
   error?: string;
 };
 
-function TextField({label, helperText, error, style, ...inputProps}: TextFieldProps): React.JSX.Element {
+function TextField({
+  label,
+  helperText,
+  error,
+  style,
+  onFocus,
+  onBlur,
+  ...inputProps
+}: TextFieldProps): React.JSX.Element {
+  const [isFocused, setIsFocused] = useState(false);
+
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
-        style={[styles.input, error ? styles.inputError : null, style]}
+        style={[
+          styles.input,
+          isFocused && styles.inputFocused,
+          error ? styles.inputError : null,
+          style,
+        ]}
         placeholderTextColor={colors.placeholder}
+        onFocus={event => {
+          setIsFocused(true);
+          onFocus?.(event);
+        }}
+        onBlur={event => {
+          setIsFocused(false);
+          onBlur?.(event);
+        }}
         {...inputProps}
       />
       {error ? (
@@ -45,6 +68,10 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     borderWidth: 1.5,
     borderColor: 'transparent',
+    ...shadows.sm,
+  },
+  inputFocused: {
+    borderColor: colors.primary,
   },
   inputError: {
     borderColor: colors.error,

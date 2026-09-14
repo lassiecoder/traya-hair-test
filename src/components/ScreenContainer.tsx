@@ -16,11 +16,17 @@ type ScreenContainerProps = PropsWithChildren<{
    * without any device-specific handling of its own. Stays fixed in place while `children` scroll.
    */
   header?: ReactNode;
+  /**
+   * Rendered below the scrollable content, pinned to the bottom of the screen (outside the
+   * ScrollView, so it never scrolls away) and inside the bottom safe-area inset.
+   */
+  footer?: ReactNode;
 }>;
 
 function ScreenContainer({
   children,
   header,
+  footer,
 }: ScreenContainerProps): React.JSX.Element {
   // Insets come from context (already known, no native remeasure) rather than the native
   // SafeAreaView component — every screen here remounts on navigation (RootNavigator has no
@@ -57,6 +63,7 @@ function ScreenContainer({
           {children}
         </ScrollView>
       </KeyboardAvoidingView>
+      {footer ? <View style={styles.footer}>{footer}</View> : null}
     </View>
   );
 }
@@ -78,6 +85,10 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 24,
     paddingTop: 40,
+  },
+  footer: {
+    paddingHorizontal: 24,
+    paddingTop: 16,
   },
   // The header now carries the top offset that `content.paddingTop` otherwise provides, so
   // scrollable content picks up right where the header's bottom edge leaves off.

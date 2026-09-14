@@ -1,11 +1,10 @@
 import { ImageSourcePropType } from 'react-native';
-import { IconGender } from './userGender';
 
 export interface MonthProgress {
   id: string;
   label: string;
   description: string;
-  genderedIcon: Record<IconGender, ImageSourcePropType>;
+  icon: ImageSourcePropType;
 }
 
 export interface ProductDirection {
@@ -60,38 +59,26 @@ export const DIAGNOSIS = {
     'A condition where the roots around the middle parting enter the resting phase early, leading to excessive shedding. Corrected at the cause, not the symptom.',
 };
 
-export const DENSITY_MAP_MONTH_0_ICON: Record<IconGender, ImageSourcePropType> = {
-  male: require('../../assets/images/month-0-m.png'),
-  female: require('../../assets/images/month-0-f.png'),
-};
+export const DENSITY_MAP_MONTH_0_ICON: ImageSourcePropType = require('../../assets/images/diffuseparting.png');
 
 export const MONTH_PROGRESS: MonthProgress[] = [
   {
     id: 'month-1',
     label: 'MONTH 1',
     description: 'Shedding settles',
-    genderedIcon: {
-      male: require('../../assets/images/month-1-m.png'),
-      female: require('../../assets/images/month-1-f.png'),
-    },
+    icon: require('../../assets/images/advancedparting.png'),
   },
   {
     id: 'month-3',
     label: 'MONTH 3',
     description: 'Baby hair at the parting',
-    genderedIcon: {
-      male: require('../../assets/images/month-3-m.png'),
-      female: require('../../assets/images/month-3-f.png'),
-    },
+    icon: require('../../assets/images/wideningparting.png'),
   },
   {
     id: 'month-5',
     label: 'MONTH 5',
     description: 'Visible density',
-    genderedIcon: {
-      male: require('../../assets/images/month-5-m.png'),
-      female: require('../../assets/images/month-5-f.png'),
-    },
+    icon: require('../../assets/images/evenparting.png'),
   },
 ];
 
@@ -109,7 +96,7 @@ export const REPORT_PRODUCTS: ReportProduct[] = [
     description: 'Balances hormones, restores the growth phase',
     price: 630,
     originalPrice: 700,
-    icon: require('../../assets/images/tablets.png'),
+    icon: require('../../assets/images/medicines.png'),
     gallery: PRODUCT_GALLERY,
     longDescription:
       'Formulated for exactly the pattern your assessment found. It works upstream of the follicle, supporting hormonal balance, reducing androgen load and improving the nutrient supply that a strand needs to stay in its growth phase longer.',
@@ -150,7 +137,7 @@ export const REPORT_PRODUCTS: ReportProduct[] = [
     description: 'Ayurvedic base that treats the internal cause',
     price: 458,
     originalPrice: 520,
-    icon: require('../../assets/images/hair-ras.png'),
+    icon: require('../../assets/images/medicines.png'),
     gallery: PRODUCT_GALLERY,
     longDescription:
       'An ayurvedic base built from root extracts your assessment flagged for your body type, taken alongside the tablets to support digestion and nutrient absorption at the source.',
@@ -193,7 +180,7 @@ export const REPORT_PRODUCTS: ReportProduct[] = [
     description: 'Stimulates root circulation twice a week',
     price: 890,
     originalPrice: 1220,
-    icon: require('../../assets/images/scalp-oil.png'),
+    icon: require('../../assets/images/medicines.png'),
     gallery: PRODUCT_GALLERY,
     longDescription:
       'A pre-wash oil that drives circulation at the root, formulated to sit on the scalp without clogging follicles the way heavier oils can.',
@@ -236,7 +223,7 @@ export const REPORT_PRODUCTS: ReportProduct[] = [
     description: 'Applied daily to thinning zones',
     price: 567,
     originalPrice: 600,
-    icon: require('../../assets/images/serum.png'),
+    icon: require('../../assets/images/medicines.png'),
     gallery: PRODUCT_GALLERY,
     longDescription:
       'Applied daily to thinning zones, this serum works on the root cause of hair fall — controlling shedding, blocking DHT locally and improving follicle health without a prescription.',

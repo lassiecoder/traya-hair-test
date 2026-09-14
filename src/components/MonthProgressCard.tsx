@@ -1,6 +1,6 @@
 import React from 'react';
 import {Image, ImageSourcePropType, StyleSheet, Text, View} from 'react-native';
-import {colors, textStyles} from '../theme';
+import {colors, shadows, textStyles} from '../theme';
 
 type MonthProgressCardProps = {
   icon: ImageSourcePropType;
@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 16,
     marginRight: 16,
+    ...shadows.sm,
   },
   icon: {
     width: '100%',

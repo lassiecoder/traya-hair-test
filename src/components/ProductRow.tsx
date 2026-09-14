@@ -1,6 +1,7 @@
 import React from 'react';
-import {Image, ImageSourcePropType, Pressable, StyleSheet, Text, View} from 'react-native';
+import {ImageSourcePropType, Pressable, StyleSheet, Text, View} from 'react-native';
 import {colors, textStyles} from '../theme';
+import IconBadge from './IconBadge';
 
 type ProductRowProps = {
   category: string;
@@ -30,7 +31,7 @@ function ProductRow({
       style={({pressed}) => [styles.row, !isLast && styles.rowDivider, pressed && onPress && styles.rowPressed]}>
       <Text style={styles.category}>{category}</Text>
       <View style={styles.content}>
-        <Image source={icon} style={styles.icon} resizeMode="contain" />
+        <IconBadge icon={icon} size={52} iconSize={30} style={styles.iconBadge} />
         <View style={styles.textWrap}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.description}>{description}</Text>
@@ -64,9 +65,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  icon: {
-    width: 36,
-    height: 36,
+  iconBadge: {
     marginRight: 14,
   },
   textWrap: {
