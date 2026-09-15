@@ -23,9 +23,9 @@ This README documents not just _how to run it_, but _why it's built the way it i
 
  
 ## Preview
-Check out the whole flow [HERE](https://drive.google.com/file/d/1RdkOt6IB24HqA0CNCtbQXc6O-FOmS3aq/view?usp=sharing)
+Check out the whole flow [HERE](https://drive.google.com/file/d/1j-KcXs2jb15fY4aYW2V4i94gbZzSV5JK/view?usp=sharing)
 
-https://github.com/user-attachments/assets/3b296af2-9fb8-44d3-9dec-918d0cc0322f
+[https://github.com/user-attachments/assets/3b296af2-9fb8-44d3-9dec-918d0cc0322f](https://github.com/user-attachments/assets/2e97f991-40fc-499a-93ac-0b11af7ec712)
 
 ## Design system
 
