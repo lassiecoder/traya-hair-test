@@ -35,8 +35,12 @@ export interface ChoiceAssessmentQuestion extends AssessmentQuestionBase {
    * 'fill' (default): single-column card sweeps to a solid selected color, icon crossfades.
    * 'checkbox': static card with a checkbox indicator, e.g. "How much hair are you losing?"
    * 'grid': two-column cards, icon above title, same fill-select behavior as 'fill'.
+   * 'photo': single-column card with a large cover-cropped photo, e.g. "What do you want your hair to do?"
+   * 'photoGrid': two-column cards, title above a large cover-cropped photo, e.g. "What does your hair look like naturally?"
    */
-  variant?: 'fill' | 'checkbox' | 'grid';
+  variant?: 'fill' | 'checkbox' | 'grid' | 'photo' | 'photoGrid';
+  /** 'photoGrid' only: aspect ratio (width / height) of each option's photo — defaults to a square. */
+  photoAspectRatio?: number;
   /** Allows picking multiple options at once; shows a Continue button instead of auto-advancing on tap. */
   multiSelect?: boolean;
   options: AssessmentOption[];

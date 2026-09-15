@@ -1,13 +1,12 @@
 import React, {useMemo, useState} from 'react';
-import {Alert, Image, Pressable, StyleSheet, Text} from 'react-native';
+import {Alert, Pressable, StyleSheet, Text, View} from 'react-native';
+import BackButton from '../components/BackButton';
 import Button from '../components/Button';
 import ScreenContainer from '../components/ScreenContainer';
 import TextField from '../components/TextField';
 import {signIn, AuthResult} from '../services/auth';
 import {colors, textStyles} from '../theme';
 import {sanitizeEmail, validateEmail, validatePassword} from '../utils/validation';
-
-const BACK_ICON = require('../../assets/images/back-btn.png');
 
 type FieldName = 'email' | 'password';
 
@@ -60,12 +59,21 @@ function LoginScreen({onLoginSuccess, onNavigateToSignUp, onBack}: LoginScreenPr
     }
   }
 
-  return (
-    <ScreenContainer>
-      <Pressable onPress={onBack} style={styles.backButton} hitSlop={8}>
-        <Image source={BACK_ICON} style={styles.backIcon} resizeMode="contain" />
-      </Pressable>
+  const footer = (
+    <View style={styles.footerRow}>
+      <BackButton onPress={onBack} />
+      <Button
+        label={isSubmitting ? 'Logging in...' : 'Log in'}
+        onPress={handleLogin}
+        disabled={!isFormValid}
+        loading={isSubmitting}
+        style={styles.footerCta}
+      />
+    </View>
+  );
 
+  return (
+    <ScreenContainer footer={footer}>
       <Text style={styles.title}>Welcome back.</Text>
       <Text style={styles.subtitle}>Log in to pick up where you left off.</Text>
 
@@ -89,15 +97,7 @@ function LoginScreen({onLoginSuccess, onNavigateToSignUp, onBack}: LoginScreenPr
         autoComplete="password"
       />
 
-      <Button
-        label={isSubmitting ? 'Logging in...' : 'Log in'}
-        onPress={handleLogin}
-        disabled={!isFormValid}
-        loading={isSubmitting}
-        style={styles.submitButton}
-      />
-
-      <Pressable onPress={onNavigateToSignUp} style={styles.footer} hitSlop={8}>
+      <Pressable onPress={onNavigateToSignUp} style={styles.footerLinkWrap} hitSlop={8}>
         <Text style={styles.footerText}>
           Don't have an account? <Text style={styles.footerLink}>Create one</Text>
         </Text>
@@ -107,16 +107,12 @@ function LoginScreen({onLoginSuccess, onNavigateToSignUp, onBack}: LoginScreenPr
 }
 
 const styles = StyleSheet.create({
-  backButton: {
-    width: 40,
-    height: 40,
+  footerRow: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 12,
   },
-  backIcon: {
-    width: 22,
-    height: 22,
+  footerCta: {
+    flex: 1,
   },
   title: {
     ...textStyles.title,
@@ -128,12 +124,9 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     marginBottom: 28,
   },
-  submitButton: {
-    marginTop: 8,
-    marginBottom: 20,
-  },
-  footer: {
+  footerLinkWrap: {
     alignItems: 'center',
+    marginTop: 8,
   },
   footerText: {
     ...textStyles.caption,

@@ -7,7 +7,7 @@ import {
   Text,
   ViewStyle,
 } from 'react-native';
-import { colors, textStyles } from '../theme';
+import { colors, shadows, textStyles } from '../theme';
 
 type ButtonProps = {
   label: string;
@@ -53,12 +53,16 @@ const styles = StyleSheet.create({
     height: 60,
     alignItems: 'center',
     justifyContent: 'center',
+    ...shadows.md,
   },
   buttonPressed: {
-    opacity: 0.85,
+    opacity: 0.9,
+    transform: [{scale: 0.98}],
   },
   buttonDisabled: {
     opacity: 0.45,
+    shadowOpacity: 0,
+    elevation: 0,
   },
   label: {
     ...textStyles.cta,

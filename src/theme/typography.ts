@@ -16,9 +16,15 @@ export const fontFamily = {
  */
 export const textStyles = {
   /** Page/section headings, e.g. "First, let's set up your profile." */
-  title: {
+  titleLarge: {
     fontFamily: fontFamily.extraBold,
     fontSize: 28,
+    lineHeight: 34,
+    letterSpacing: -0.56, // -2% of 28px
+  },
+  title: {
+    fontFamily: fontFamily.extraBold,
+    fontSize: 20,
     lineHeight: 34,
     letterSpacing: -0.56, // -2% of 28px
   },

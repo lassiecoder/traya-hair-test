@@ -1,11 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Animated, Easing, Image, LayoutChangeEvent, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Animated, Easing, LayoutChangeEvent, StyleSheet, Text, View} from 'react-native';
+import BackButton from '../components/BackButton';
 import Button from '../components/Button';
 import RootCauseBar from '../components/RootCauseBar';
+import ScoreGauge from '../components/ScoreGauge';
 import ScreenContainer from '../components/ScreenContainer';
-import {colors, textStyles} from '../theme';
-
-const BACK_ICON = require('../../assets/images/back-btn.png');
+import {colors, shadows, textStyles} from '../theme';
 
 /** Matches RootCauseBar's percent-fill count-up duration, so the score and the root-cause bars read as one motion. */
 const SCORE_COUNT_MS = 900;
@@ -97,16 +97,18 @@ function ResultsScreen({onSeeFullReport, onBack}: ResultsScreenProps): React.JSX
   // washed-out mid-tone for a frame before snapping to full color, which reads as a flicker.
   const textEntranceStyle = {transform: [{translateY: textTranslateY}]};
 
+  const footer = (
+    <View style={styles.footerRow}>
+      <BackButton onPress={onBack} />
+      <Button label="See full report" onPress={onSeeFullReport} style={styles.footerCta} />
+    </View>
+  );
+
   return (
-    <ScreenContainer>
-      <View style={styles.headerRow}>
-        <Pressable onPress={onBack} style={styles.backButton} hitSlop={8}>
-          <Image source={BACK_ICON} style={styles.backIcon} resizeMode="contain" />
-        </Pressable>
-        <Animated.Text style={[styles.headerEyebrow, textEntranceStyle]}>
-          YOUR RESULT · HAIR HEALTH INDEX
-        </Animated.Text>
-      </View>
+    <ScreenContainer footer={footer}>
+      <Animated.Text style={[styles.headerEyebrow, textEntranceStyle]}>
+        YOUR RESULT · HAIR HEALTH INDEX
+      </Animated.Text>
 
       <View style={styles.scoreRow}>
         <View style={[styles.scoreBlock, scoreBlockWidth != null && {width: scoreBlockWidth}]}>
@@ -121,6 +123,10 @@ function ResultsScreen({onSeeFullReport, onBack}: ResultsScreenProps): React.JSX
         <Text style={styles.scoreNumber}>{RESULT.score}</Text>
         <Text style={styles.scoreMax}>/{RESULT.maxScore}</Text>
       </View>
+
+      <Animated.View style={[styles.gaugeWrap, textEntranceStyle]}>
+        <ScoreGauge score={displayedScore} />
+      </Animated.View>
 
       <Animated.Text style={[styles.description, textEntranceStyle]}>{RESULT.description}</Animated.Text>
 
@@ -137,32 +143,22 @@ function ResultsScreen({onSeeFullReport, onBack}: ResultsScreenProps): React.JSX
           </View>
         ))}
       </View>
-
-      <Button label="See full report" onPress={onSeeFullReport} style={styles.cta} />
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  headerRow: {
+  footerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
   },
-  backButton: {
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  backIcon: {
-    width: 22,
-    height: 22,
+  footerCta: {
+    flex: 1,
   },
   headerEyebrow: {
     ...textStyles.captionEmphasis,
     color: colors.textPrimary,
+    marginBottom: 16,
   },
   eyebrow: {
     ...textStyles.captionEmphasis,
@@ -203,6 +199,9 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     marginBottom: 4,
   },
+  gaugeWrap: {
+    marginBottom: 20,
+  },
   description: {
     ...textStyles.body,
     color: colors.textMuted,
@@ -216,9 +215,9 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.inputBackground,
     borderRadius: 20,
-    overflow: 'hidden',
     marginTop: 16,
     marginBottom: 24,
+    ...shadows.sm,
   },
   causeRow: {
     padding: 20,
@@ -226,9 +225,6 @@ const styles = StyleSheet.create({
   causeRowDivider: {
     borderBottomWidth: 1,
     borderBottomColor: colors.divider,
-  },
-  cta: {
-    marginBottom: 8,
   },
 });
 

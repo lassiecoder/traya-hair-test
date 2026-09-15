@@ -23,7 +23,6 @@ import {
   REPORT_PRODUCTS,
   ReportProduct,
 } from '../data/fullReport';
-import { IconGender } from '../data/userGender';
 import { colors, textStyles } from '../theme';
 
 const START_PLAN_ICON = require('../../assets/images/start-plan.png');
@@ -36,7 +35,6 @@ const DIAGNOSIS_ENTRANCE_OFFSET = 24;
 const DENSITY_ENTRANCE_OFFSET = 56;
 
 type FullReportScreenProps = {
-  iconGender: IconGender;
   onStartPlan: () => void;
   onSelectProduct: (product: ReportProduct) => void;
   onBack: () => void;
@@ -46,7 +44,6 @@ type FullReportScreenProps = {
 };
 
 function FullReportScreen({
-  iconGender,
   onStartPlan,
   onSelectProduct,
   onBack,
@@ -118,7 +115,7 @@ function FullReportScreen({
                 Your density map · Month 0
               </Text>
               <Image
-                source={DENSITY_MAP_MONTH_0_ICON[iconGender]}
+                source={DENSITY_MAP_MONTH_0_ICON}
                 style={styles.densityCardIcon}
                 resizeMode="contain"
               />
@@ -135,7 +132,7 @@ function FullReportScreen({
               {MONTH_PROGRESS.map(month => (
                 <MonthProgressCard
                   key={month.id}
-                  icon={month.genderedIcon[iconGender]}
+                  icon={month.icon}
                   label={month.label}
                   description={month.description}
                 />

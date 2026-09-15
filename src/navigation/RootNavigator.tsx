@@ -82,7 +82,6 @@ function RootNavigator(): React.JSX.Element {
       // screen to land on instead, so for now this just loops back to the start of the funnel.
       return (
         <FullReportScreen
-          iconGender={iconGender}
           onStartPlan={goToAssessmentIntro}
           onSelectProduct={goToProductDetail}
           onBack={goToResults}
